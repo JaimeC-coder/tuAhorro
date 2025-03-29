@@ -1,0 +1,26 @@
+{
+    // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Iniciar servidor Laravel",
+            "type": "shell",
+            "command": "php artisan serve --port=8500",
+            "isBackground": true,
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": [],
+        },
+        {
+          "label": "Compilar assets con Vite",
+          "type": "shell",
+          "command": "npm run dev",
+          "isBackground": true,
+          "problemMatcher": [],
+          "runOptions": {
+            "runOn": "folderOpen"
+          }
+        }
+    ]
+}
