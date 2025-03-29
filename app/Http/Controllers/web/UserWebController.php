@@ -1,39 +1,32 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\web;
 
 use App\DTOs\UserDTO;
-use App\DTOs\UserFilterDTO;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
 
-    protected $userService;
+    protected UserController $userController;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserController $userController)
     {
-        $this->userService = $userService;
+        $this->userController = $userController;
     }
+
 
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        try {
-            $request = UserFilterDTO::fromRequest($request);
-            $users = $this->userService->getAllUsers($request);
-            return UserResource::collection($users);
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-            return response()->json(['error' => 'Unable to fetch users'], 500);
-        }
+        //
     }
 
     /**
@@ -49,15 +42,14 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-       try {
-
-        $userDTO = UserDTO::fromRequest($request);
-        $user = $this->userService->createUser($userDTO);
-
-        return new UserResource($user);
-       } catch (\Throwable $th) {
-        return  $th->getMessage();
-       }
+        try {
+            $data =  $this->userController->store($request);
+            return view('user.create', compact('data'));
+        } catch (\Throwable $th) {
+            return  $th->getMessage();
+        } catch (\Exception $e) {
+            return  $e->getMessage();
+        }
     }
 
     /**
