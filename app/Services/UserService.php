@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\UserRepository;
 use App\DTOs\UserDTO;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -14,8 +15,11 @@ class UserService
         $this->UserRepository = $UserRepository;
     }
 
-    public function create(UserDTO $dto)
+    public function createUser(UserDTO $userDTO)
     {
-        return $this->UserRepository->create((array) $dto);
+        // Encriptar contraseña antes de guardarla
+        $userDTO->password = Hash::make($userDTO->password);
+
+        return $this->UserRepository->create((array) $userDTO);
     }
 }
