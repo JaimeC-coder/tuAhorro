@@ -31,12 +31,10 @@ class MakeArchitecture extends Command
         $this->call('make:repository', ['name' => $name]);
         $this->call('make:service', ['name' => $name]);
         $this->call('make:dto', ['name' => $name]);
-        $this->call('make:controller', ['name' => $name.'Controller']);
-        $this->call('make:request', ['name' => $name]);
-        $this->call('make:resource', ['name' => $name]);
-        // $this->call('make:transformer', ['name' => $name]);
-
-        $this->info('Se han creado todos los archivos de arquitectura del patron repositorio con algunos cambios');
+        $this->call('make:controller', ['name' => $name.'Controller', '--resource' => true , '--model' => $name ]);
+        $this->call('make:request', ['name' => $name .'Request']);
+        $this->call('make:resource', ['name' => $name .'Resource']);
+       $this->info('Se han creado todos los archivos de arquitectura del patron repositorio con algunos cambios');
 
 
     }
