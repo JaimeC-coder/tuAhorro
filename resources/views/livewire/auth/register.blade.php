@@ -12,6 +12,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $name = '';
     public string $email = '';
     public string $password = '';
+    public string $phone = '';
     public string $password_confirmation = '';
 
     /**
@@ -72,7 +73,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             required
             autocomplete="tel"
             placeholder="+1234567890"
-
+        />
         <!-- Password -->
         <flux:input
             wire:model="password"

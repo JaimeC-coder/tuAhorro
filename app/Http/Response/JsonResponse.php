@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Response;
-
-use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\JsonResponse as HttpJsonResponse;
 
 class JsonResponse
