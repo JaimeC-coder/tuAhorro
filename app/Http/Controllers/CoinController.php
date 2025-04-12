@@ -24,9 +24,16 @@ class CoinController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function list(Request $request)
     {
-        //
+        try {
+            $request = UserFilterDTO::fromRequest($request);
+            $users = $this->userService->getAllUsers($request);
+            return UserResource::collection($users);
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return response()->json(['error' => 'Unable to fetch users'], 500);
+        }
     }
 
 
