@@ -1,12 +1,17 @@
 <?php
 
+use App\Http\Controllers\CoinController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Route::get('/', function () {
     Log::info('Welcome page accessed');
-    return "Welcome to the home page!";
+    $co = new CoinController(
+        app()->make('App\Services\CoinService')
+    );
+    $coints =  $co->list(request());
+    return $coints;
 })->name('home');
 
 Route::view('dashboard', 'dashboard')

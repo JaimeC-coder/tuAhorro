@@ -18,7 +18,7 @@ class CoinResource extends JsonResource
         return [
             'type' => $this->type,
             'symbol' => $this->symbol,
-            'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
+            'created_at' => Carbon::parse($this->updated_at)->diffForHumans(),
         ];
     }
 }

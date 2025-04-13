@@ -3,20 +3,15 @@
 namespace App\Repositories;
 
 use App\Models\Coin;
-use Illuminate\Support\Facades\Log;
 
-class CoinRepository
+class CoinRepository extends BaseRepository
 {
-    public function create(array $data)
+
+
+    public function __construct()
     {
-        try {
-            return Coin::create($data);
-        } catch (\Illuminate\Database\QueryException $e) {
-            Log::error('Error de base de datos: ' . $e->getMessage());
-            throw $e;
-        } catch (\Throwable $th) {
-            Log::error('Error inesperado: ' . $th->getMessage());
-            throw $th;
-        }
+        $this->model = new Coin();
     }
+
+
 }

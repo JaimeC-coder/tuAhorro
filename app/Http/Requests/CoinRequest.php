@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 
-class CoinRequest extends FormRequest
+
+class CoinRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,11 +19,45 @@ class CoinRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+
+    public function rulesGet(): array
+    {
+        return [
+            'id' => 'string|max:255',
+            'type' => 'string|max:255',
+            'symbol' => 'string|max:255',
+            'page' => 'integer|min:1',
+            'limit' => 'integer|min:1|max:100',
+        ];
+    }
+    public function rulesPost(): array
     {
         return [
             'type' => 'required|string|max:255',
             'symbol' => 'required|string|max:255',
+        ];
+    }
+
+    public function rulesPut(): array
+    {
+        return [
+            'id' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'symbol' => 'required|string|max:255',
+        ];
+    }
+    public function rulesDestroy(): array
+    {
+        return [
+            'id' => 'required|string|max:255',
+        ];
+    }
+    public function rulesPatch(): array
+    {
+        return [
+            'id' => 'required|string|max:255',
+            'type' => 'string|max:255',
+            'symbol' => 'string|max:255',
         ];
     }
 }

@@ -20,7 +20,7 @@ class SavingResource extends JsonResource
             'user_id' => $this->user_id,
             'coin_id' => $this->coin_id,
             'amount' => $this->amount,
-            'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
+            'created_at' => Carbon::parse($this->updated_at)->diffForHumans(),
             'updated_at' => $this->updated_at->diffForHumans(),
         ];
     }

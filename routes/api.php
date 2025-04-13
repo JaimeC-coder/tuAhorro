@@ -16,5 +16,6 @@ Route::prefix('admin')->group(function () {
     Route::prefix('coins')->group(function () {
         Route::get('/', [CoinApiController::class, 'index'])->name('admin.coins.index');
         Route::post('/', [CoinApiController::class, 'register'])->name('admin.coins.store');
+        Route::put('/',[CoinApiController::class, 'actualizar'])->name('admin.coins.update');
     });
 });
