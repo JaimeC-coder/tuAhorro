@@ -4,8 +4,14 @@ namespace App\Repositories;
 
 use App\Models\User;
 
-class UserRepository
+class UserRepository extends BaseRepository
 {
+
+
+    public function __construct()
+    {
+        $this->model = new User();
+    }
     /**
      * Get all users
      *
@@ -16,8 +22,13 @@ class UserRepository
         return User::filter($request)->get();
     }
 
-    public function create(array $data)
+    public function getUserByEmail(string $email)
     {
-        return User::create($data);
+        return User::where('email', $email)->first();
     }
+    public function getUserByPhone(string $phone)
+    {
+        return User::where('phone', $phone)->first();
+    }
+
 }

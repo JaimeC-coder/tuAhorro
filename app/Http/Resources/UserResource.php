@@ -19,8 +19,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'created_at' => Carbon::parse($this->created_at)->NotDiffForHumans(),
-            'updated_at' => Carbon::parse($this->updated_at)->NotDiffForHumans(),
+            'created_at' => Carbon::parse($this->updated_at)->diffForHumans(),
         ];
     }
 }

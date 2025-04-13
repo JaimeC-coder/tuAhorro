@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRequest extends FormRequest
+class UserRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,13 +19,40 @@ class UserRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rulesGet(): array
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'phone' => 'required|string|unique:users',
-            'password' => 'required|min:6',
+            'id' => 'string|max:255',
+            'name' => 'string|max:255',
+            'email' => 'string|max:255',
+            'phone' => 'string|max:255',
+            'page' => 'integer|min:1',
+            'limit' => 'integer|min:1|max:100',
+        ];
+    }
+    public function rulesPost(): array
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'password' => 'required|string|max:255'
+        ];
+    }
+    public function rulesPut(): array
+    {
+        return [
+            'id' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
+        ];
+    }
+    public function rulesDestroy(): array
+    {
+        return [
+            'id' => 'required|string|max:255',
         ];
     }
 }

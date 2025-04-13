@@ -1,7 +1,8 @@
 <?php
 
-namespace App\DTOs;
+namespace App\DTOs\Filter;
 
+use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 
 class UserFilterDTO
@@ -9,7 +10,7 @@ class UserFilterDTO
     public ?array $name;
     public ?array $email;
     public ?array $phone;
-    public ?string $created_at;
+    public ?array $created_at;
 
     public function __construct(?array $name, ?array $email,?array $phone ,?string $created_at = null )
     {
@@ -19,7 +20,7 @@ class UserFilterDTO
         $this->created_at = $created_at;
     }
 
-    public static function fromRequest(Request $request): self
+    public static function fromRequest(UserRequest $request): self
     {
         return new self(
             $request->input('name'),
@@ -47,10 +48,10 @@ class UserFilterDTO
 
     public function toArray(): array
     {
-        return array_filter([
+        return [
             'name' => $this->name,
             'email' => $this->email,
             'created_at' => $this->created_at
-        ]);
+        ];
     }
 }
