@@ -8,6 +8,7 @@ use App\Http\Response\JsonResponse;
 use App\Http\Response\ApiValidationException;
 use Exception;
 use Illuminate\Database\QueryException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 trait ApiResponder
 {
@@ -18,6 +19,8 @@ trait ApiResponder
             return JsonResponse::success($data, $successMessage, true, 1, $statusCode);
         } catch (ApiValidationException $e) {
             return JsonResponse::error($e->render(), $e->getMessage(), false, 0, $e->getCode());
+        }catch (UnauthorizedHttpException $e) {
+            return JsonResponse::error(null, $e->getMessage(), false, 0, 401);
         } catch (\Exception $e) {
             return JsonResponse::error($e->getMessage(), 'Ocurrió un error', false, 0, 500);
         }

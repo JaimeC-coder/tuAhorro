@@ -26,27 +26,27 @@ class UserApiController extends Controller
             return $UserRequest->has('id')
                 ? $this->userController->show($UserRequest)
                 : $this->userController->list($UserRequest);
-        }, 'Monedas obtenidas correctamente');
+        }, 'Usuarios obtenidos correctamente');
     }
 
     public function register(Request $request)
     {
         return $this->handleApiRequest(function () use ($request) {
             return $this->userController->store($request);
-        }, 'Moneda creada correctamente', 201);
+        }, 'Usuario creada correctamente', 201);
     }
 
     public function actualizar(Request $request)
     {
         return $this->handleApiRequest(function () use ($request) {
             return $this->userController->update($request);
-        }, 'Moneda actualizada correctamente');
+        }, 'Usuario actualizado correctamente');
     }
 
     public function eliminar(Request $request)
     {
         return $this->handleApiRequest(function () use ($request) {
             return $this->userController->destroy($request);
-        }, 'Moneda eliminada correctamente');
+        }, 'Usuario eliminado correctamente');
     }
 }
