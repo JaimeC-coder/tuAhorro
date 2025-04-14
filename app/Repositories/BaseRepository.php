@@ -1,7 +1,11 @@
 <?php
+
 namespace App\Repositories;
 
+use Closure;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
 abstract class BaseRepository
@@ -13,46 +17,54 @@ abstract class BaseRepository
         $this->model = $model;
     }
 
-    public function create(array $data)
+    protected function handle(Closure $callback)
     {
         try {
-            return $this->model->create($data);
-        } catch (\Illuminate\Database\QueryException $e) {
+            return $callback();
+        } catch (QueryException $e) {
             Log::error('Error de base de datos: ' . $e->getMessage());
-            throw new \Exception('Error de base de datos: ' . $e->getMessage(), 400);
+            throw new Exception('Error de base de datos: ' . $e->getMessage(), 400);
         } catch (\Throwable $th) {
             Log::error('Error inesperado: ' . $th->getMessage());
-            throw new \Exception('Error inesperado: ' . $th->getMessage(), 500);
+            throw new Exception('Error inesperado: ' . $th->getMessage(), 500);
         }
     }
 
-    public function find($id)
+    public function create(array $data): Model
     {
-        return $this->model->find($id);
+        return $this->handle(fn() => $this->model->create($data));
     }
 
-    public function all()
+    public function find(int|string $id): ?Model
     {
-        return $this->model->all();
+        return $this->handle(fn() => $this->model->find($id));
     }
 
-    public function update($id, array $data)
+    public function all(array $filters = []): \Illuminate\Database\Eloquent\Collection
     {
-        $item = $this->model->find($id);
-        if (!$item) {
-            throw new \Exception('Registro no encontrado', 404);
-        }
-        $item->update($data);
-        return $item;
+        return $this->handle(fn() => $this->model->where($filters)->get());
     }
 
-    public function delete($id)
+    public function update(int|string $id, array $data): Model
     {
-        $item = $this->model->find($id);
-        if (!$item) {
-            throw new \Exception('Registro no encontrado', 404);
-        }
-        $item->delete();
-        return true;
+        return $this->handle(function () use ($id, $data) {
+            $item = $this->model->find($id);
+            if (!$item) {
+                throw new Exception('Registro no encontrado', 404);
+            }
+            $item->update($data);
+            return $item;
+        });
+    }
+
+    public function delete(int|string $id): bool
+    {
+        return $this->handle(function () use ($id) {
+            $item = $this->model->find($id);
+            if (!$item) {
+                throw new Exception('Registro no encontrado', 404);
+            }
+            return (bool) $item->delete();
+        });
     }
 }

@@ -8,14 +8,13 @@ class CoinFilterDTO
 {
     public ?array $type;
     public ?array $symbol;
-    public ?array $created_at = null;
+    public ?array $created_at;
 
-
-    public function __construct(?array $type= null, ?array $symbol, ?array $created_at = null)
+    public function __construct(?array $type = null, ?array $symbol = null, ?array $created_at = null)
     {
-        $this->created_at = $created_at;
         $this->type = $type;
         $this->symbol = $symbol;
+        $this->created_at = $created_at;
     }
 
     public static function fromRequest(CoinRequest $data): self
@@ -23,7 +22,7 @@ class CoinFilterDTO
         return new self(
             $data->input('type'),
             $data->input('symbol'),
-            $data->input('created_at') ? $data->input('created_at') : null
+            $data->input('created_at') ?? null
         );
     }
 
@@ -35,5 +34,4 @@ class CoinFilterDTO
             'created_at' => $this->created_at,
         ];
     }
-
 }

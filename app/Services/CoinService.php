@@ -5,65 +5,41 @@ namespace App\Services;
 use App\Repositories\CoinRepository;
 use App\DTOs\CoinDTO;
 use App\DTOs\Filter\CoinFilterDTO;
+use App\Traits\ApiResponder;
 
 class CoinService
 {
-    protected $CoinRepository;
+    use ApiResponder;
 
+    protected $coinRepository;
+    
     public function __construct(CoinRepository $CoinRepository)
     {
-        $this->CoinRepository = $CoinRepository;
+        $this->coinRepository = $CoinRepository;
     }
 
     public function create(CoinDTO $dto)
     {
-
-        try {
-            return $this->CoinRepository->create($dto->toArray());
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new \Exception('Error en la base de datos: ' . $e->getMessage(), 400);
-        } catch (\Throwable $th) {
-            throw new \Exception('Error inesperado: ' . $th->getMessage(), 500);
-        }
+        return $this->coinRepository->create($dto->toArray());
     }
+
     public function getAllCoins(CoinFilterDTO $dto)
     {
-        try {
-            return $this->CoinRepository->all($dto->toArray());
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new \Exception('Error en la base de datos: ' . $e->getMessage(), 400);
-        } catch (\Throwable $th) {
-            throw new \Exception('Error inesperado: ' . $th->getMessage(), 500);
-        }
+        return $this->coinRepository->all($dto->toArray());
     }
-    public function find($id)
+
+    public function find(int|string $id)
     {
-        try {
-            return $this->CoinRepository->find($id);
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new \Exception('Error en la base de datos: ' . $e->getMessage(), 400);
-        } catch (\Throwable $th) {
-            throw new \Exception('Error inesperado: ' . $th->getMessage(), 500);
-        }
+        return  $this->coinRepository->find($id);
     }
-    public function update($id, CoinDTO $dto)
+
+    public function update(int|string $id, CoinDTO $dto)
     {
-        try {
-            return $this->CoinRepository->update($id, $dto->toArray());
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new \Exception('Error en la base de datos: ' . $e->getMessage(), 400);
-        } catch (\Throwable $th) {
-            throw new \Exception('Error inesperado: ' . $th->getMessage(), 500);
-        }
+        return $this->coinRepository->update($id, $dto->toArray());
     }
-    public function delete($id)
+
+    public function delete(int|string $id)
     {
-        try {
-            return $this->CoinRepository->delete($id);
-        } catch (\Illuminate\Database\QueryException $e) {
-            throw new \Exception('Error en la base de datos: ' . $e->getMessage(), 400);
-        } catch (\Throwable $th) {
-            throw new \Exception('Error inesperado: ' . $th->getMessage(), 500);
-        }
+        return $this->coinRepository->delete($id);
     }
 }

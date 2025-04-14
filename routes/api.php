@@ -18,6 +18,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/', [CoinApiController::class, 'listar'])->name('admin.coins.index');
         Route::post('/', [CoinApiController::class, 'register'])->name('admin.coins.store');
         Route::put('/',[CoinApiController::class, 'actualizar'])->name('admin.coins.update');
+        Route::delete('/',[CoinApiController::class, 'eliminar'])->name('admin.coins.destroy');
     });
     Route::prefix('users')->group(function () {
         Route::get('/', [UserApiController::class, 'listar'])->name('admin.users.index');

@@ -6,24 +6,22 @@ use App\Http\Requests\CoinRequest;
 
 class CoinDTO
 {
-    public ?string $id;
     public string $type;
     public string $symbol;
+    public ?string $id;
 
-
-    public function __construct(string $type, string $symbol , ?string $id = null)
+    public function __construct(string $type, string $symbol, ?string $id = null)
     {
-        $this->id = $id;
         $this->type = $type;
         $this->symbol = $symbol;
+        $this->id = $id;
     }
-
 
     public static function fromRequest(CoinRequest $data): self
     {
         return new self(
-            $data['type'],
-            $data['symbol'],
+            $data->input('type'),
+            $data->input('symbol'),
             $data->input('id')
         );
     }
@@ -36,5 +34,4 @@ class CoinDTO
             'id' => $this->id,
         ];
     }
-
 }

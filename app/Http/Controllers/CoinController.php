@@ -7,11 +7,8 @@ use App\DTOs\Filter\CoinFilterDTO;
 use App\Http\Requests\CoinRequest;
 use App\Http\Resources\CoinResource;
 use App\Http\Response\ApiValidationException;
-use App\Http\Response\JsonResponse;
-use App\Models\Coin;
 use App\Services\CoinService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CoinController extends Controller
@@ -58,10 +55,10 @@ class CoinController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $coin)
+    public function show(Request $request)
     {
         //
-        $coin = $this->coinService->find($coin->id);
+        $coin = $this->coinService->find($request->id);
         if (!$coin) {
             throw new \Exception('Moneda no encontrada', 404);
 
