@@ -7,10 +7,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Requests\UserRequest;
 use App\Http\Response\JsonResponse;
 use Illuminate\Http\Request;
-
+use App\Traits\ApiResponder;
 class UserApiController extends Controller
 {
-
+    use ApiResponder;
     protected UserController $userController;
 
     public function __construct(UserController $userController)
@@ -18,75 +18,35 @@ class UserApiController extends Controller
         $this->userController = $userController;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function listar(Request $request)
     {
-        try {
+        return $this->handleApiRequest(function () use ($request) {
+            $UserRequest = UserRequest::createFrom($request);
 
-            $request = UserRequest::createFrom($request);
-
-            if ($request->has('id')) {
-                $data = $this->userController->show($request);
-            } else {
-                $data = $this->userController->list($request);
-            }
-
-            return JsonResponse::success($data, 'Usuarios obtenidas correctamente', true, 1, 200);
-        } catch (\App\Http\Response\ApiValidationException $e) {
-            return JsonResponse::error($e->render(), $e->getMessage(), false, 0, $e->getCode());
-        } catch (\Exception $e) {
-            return JsonResponse::error($e->getMessage(), 'Error al obtener usuarios', false, 0, 500);
-        }
+            return $UserRequest->has('id')
+                ? $this->userController->show($UserRequest)
+                : $this->userController->list($UserRequest);
+        }, 'Monedas obtenidas correctamente');
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function register(Request $request)
     {
-        try {
-            $data = $this->userController->store($request);
-            return JsonResponse::success($data, 'Usuario creada correctamente', true, 1, 201);
-        } catch (\App\Http\Response\ApiValidationException $e) {
-            return JsonResponse::error($e->render(), $e->getMessage(), false, 0, $e->getCode());
-        } catch (\Exception $e) {
-            return JsonResponse::error($e->getMessage(), 'Error al crear un usuario', false, 0, 500);
-        }
+        return $this->handleApiRequest(function () use ($request) {
+            return $this->userController->store($request);
+        }, 'Moneda creada correctamente', 201);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function actualizar(Request $request)
     {
-        try {
-            $data = $this->userController->update($request);
-            return JsonResponse::success($data, 'Usuario actualizada correctamente', true, 1, 200);
-        } catch (\App\Http\Response\ApiValidationException $e) {
-            return JsonResponse::error($e->render(), $e->getMessage(), false, 0, $e->getCode());
-        } catch (\Exception $e) {
-            return JsonResponse::error($e->getMessage(), 'Error al actualizar la moneda', false, 0, 500);
-        }
+        return $this->handleApiRequest(function () use ($request) {
+            return $this->userController->update($request);
+        }, 'Moneda actualizada correctamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function eliminar(Request $request)
     {
-        try {
-            $data = $this->userController->destroy($request);
-            return JsonResponse::success($data, 'Usuario eliminada correctamente', true, 1, 200);
-        } catch (\App\Http\Response\ApiValidationException $e) {
-            return JsonResponse::error($e->render(), $e->getMessage(), false, 0, $e->getCode());
-        } catch (\Exception $e) {
-            return JsonResponse::error($e->getMessage(), 'Error al eliminar la moneda', false, 0, 500);
-        }
-
-        //
+        return $this->handleApiRequest(function () use ($request) {
+            return $this->userController->destroy($request);
+        }, 'Moneda eliminada correctamente');
     }
 }

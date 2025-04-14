@@ -22,34 +22,8 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index(Request $request)
-    // {
-    //     try {
-    //         $request = UserFilterDTO::fromRequest($request);
-    //         $users = $this->userService->getAllUsers($request);
-    //         return UserResource::collection($users);
-    //     } catch (\Throwable $th) {
-    //         Log::error($th->getMessage());
-    //         return response()->json(['error' => 'Unable to fetch users'], 500);
-    //     }
-    // }
-
-    /**
-     * Display a listing of the resource.
-     */
     public function list(Request $request)
     {
-
-        /**
-         *    $request = CoinRequest::createFrom($request);
-        $coinDTO = CoinFilterDTO::fromRequest($request);
-        $coins = $this->coinService->getAllCoins($coinDTO);
-         */
-
 
         $request = UserRequest::createFrom($request);
         $UserDTO = UserFilterDTO::fromRequest($request);
