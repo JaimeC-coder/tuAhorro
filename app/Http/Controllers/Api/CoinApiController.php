@@ -11,7 +11,6 @@ use App\Traits\ApiResponder;
 
 class CoinApiController extends Controller
 {
-
     use ApiResponder;
     protected CoinController $coinController;
 
