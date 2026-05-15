@@ -6,13 +6,15 @@ use App\Repositories\CoinRepository;
 use App\DTOs\CoinDTO;
 use App\DTOs\Filter\CoinFilterDTO;
 use App\Traits\ApiResponder;
+use Illuminate\Container\Attributes\Log;
+use Illuminate\Support\Facades\Log as FacadesLog;
 
 class CoinService
 {
     use ApiResponder;
 
     protected $coinRepository;
-    
+
     public function __construct(CoinRepository $CoinRepository)
     {
         $this->coinRepository = $CoinRepository;
@@ -25,7 +27,7 @@ class CoinService
 
     public function getAllCoins(CoinFilterDTO $dto)
     {
-        return $this->coinRepository->all($dto->toArray());
+        return $this->coinRepository->all($dto);
     }
 
     public function find(int|string $id)

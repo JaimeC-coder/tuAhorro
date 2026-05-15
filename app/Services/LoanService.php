@@ -2,20 +2,26 @@
 
 namespace App\Services;
 
-use App\Repositories\LoansRepository;
-use App\DTOs\LoansDTO;
+use App\DTOs\Filter\LoanFilterDTO;
+use App\Repositories\LoanRepository;
+use App\DTOs\LoanDTO;
 
-class LoansService
+class LoanService
 {
     protected $LoansRepository;
 
-    public function __construct(LoansRepository $LoansRepository)
+    public function __construct(LoanRepository $LoansRepository)
     {
         $this->LoansRepository = $LoansRepository;
     }
 
-    public function create(LoansDTO $dto)
+    public function create(LoanDTO $dto)
     {
-        return $this->LoansRepository->create((array) $dto);
+        return $this->LoansRepository->create($dto->toArray());
+    }
+
+    public function getAllLoans(LoanFilterDTO $dto)
+    {
+        return $this->LoansRepository->all($dto);
     }
 }

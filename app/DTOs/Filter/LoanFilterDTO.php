@@ -2,34 +2,31 @@
 
 namespace App\DTOs\Filter;
 
-use App\Http\Requests\CoinRequest;
+use App\Http\Requests\LoanRequest;
 
-class CoinFilterDTO implements FilterDTOInterfaseDTO
+class LoanFilterDTO implements FilterDTOInterfaseDTO
 {
-    public ?array $type;
-    public ?array $symbol;
+
     public ?array $created_at;
 
-    public CoinRequest $request;
+    public LoanRequest $request;
 
 
-    public static array $allowedFilters = ['type', 'symbol', 'created_at'];
+    public static array $allowedFilters = ['created_at'];
 
-    public function __construct(CoinRequest $request)
+    public function __construct(LoanRequest $request)
     {
         $this->request  = $request;
-        $this->type     = $request->input('type');
-        $this->symbol   = $request->input('symbol');
         $this->created_at = $request->input('created_at');
     }
 
-    public static function fromRequest(CoinRequest $request): self
+    public static function fromRequest(LoanRequest $request): self
     {
         return new self($request);
     }
 
 
-    public function getRequest(): CoinRequest
+    public function getRequest(): LoanRequest
     {
         return $this->request;
     }
@@ -38,13 +35,11 @@ class CoinFilterDTO implements FilterDTOInterfaseDTO
     public function toArray(): array
     {
 
-        if ($this->type === null && $this->symbol === null && $this->created_at === null) {
+        if ($this->created_at === null) {
             return [];
         }
 
         return [
-            'type' => $this->type,
-            'symbol' => $this->symbol,
             'created_at' => $this->created_at,
         ];
     }
@@ -52,7 +47,7 @@ class CoinFilterDTO implements FilterDTOInterfaseDTO
 
     public static function getAllowedFilters(): array
     {
-        return ['type', 'symbol', 'created_at'];
+        return ['created_at'];
     }
 
     public function getLimit(): int

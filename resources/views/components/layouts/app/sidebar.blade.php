@@ -14,10 +14,9 @@
             <flux:navlist variant="outline" class="mt-4">
                 <flux:navlist.group :heading="__('Platform')" class="grid gap-2">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="credit-card" :href="route('product')" :current="request()->routeIs('product')" wire:navigate>{{ __('Product') }}</flux:navlist.item>
-                    <flux:navlist.item icon="currency-dollar" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Loans') }}</flux:navlist.item>
-                    {{-- <flux:navlist.item icon="home" :href="route('loans')" :current="request()->routeIs('loans')" wire:navigate>{{ __('Loans') }}</flux:navlist.item> --}}
-                    <flux:navlist.item icon="home" :href="route('product')" :current="request()->routeIs('product')" wire:navigate>{{ __('Product') }}</flux:navlist.item>
+                    <flux:navlist.item icon="credit-card" :href="route('coins.index')" :current="request()->routeIs('coins.*')" wire:navigate>{{ __('Coins') }}</flux:navlist.item>
+                    <flux:navlist.item icon="currency-dollar" :href="route('loans.index')" :current="request()->routeIs('loans.*')" wire:navigate>{{ __('Loans') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="route('savings.index')" :current="request()->routeIs('savings.*')" wire:navigate>{{ __('Savings') }}</flux:navlist.item>
 
                 </flux:navlist.group>
             </flux:navlist>

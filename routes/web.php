@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\web\CoinController;
-use App\Http\Controllers\web\LoanController;
+use App\Http\Controllers\web\CoinWebController;
+use App\Http\Controllers\web\LoanWebController;
+use App\Http\Controllers\web\SavingWebController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Route::get('/', function () {
     Log::info('Welcome page accessed');
-        $coints = [
-            ['name' => 'Bitcoin', 'symbol' => 'BTC', 'price' => 50000],
-            ['name' => 'Ethereum', 'symbol' => 'ETH', 'price' => 4000],
-            ['name' => 'Cardano', 'symbol' => 'ADA', 'price' => 2.5],
-        ];
+    $coints = [
+        ['name' => 'Bitcoin', 'symbol' => 'BTC', 'price' => 50000],
+        ['name' => 'Ethereum', 'symbol' => 'ETH', 'price' => 4000],
+        ['name' => 'Cardano', 'symbol' => 'ADA', 'price' => 2.5],
+    ];
     return $coints;
 })->name('home');
 
@@ -31,14 +32,9 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 
-
-    Route::resource('coins', CoinController::class)->except(['update', 'destroy', 'store']);
-     Route::resource('loans', LoanController::class)->except(['update', 'destroy', 'store']);
-    // Route::resource('savings', SavingController::class)->except(['update', 'destroy', 'store']);
-
-
-
-
+    Route::resource('coins', CoinWebController::class)->except(['update', 'destroy', 'store']);
+    Route::resource('loans', LoanWebController::class)->except(['update', 'destroy', 'store']);
+    Route::resource('savings', SavingWebController::class)->except(['update', 'destroy', 'store']);
 });
 
 require __DIR__ . '/auth.php';

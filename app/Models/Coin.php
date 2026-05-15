@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
 
 class Coin extends Model
 {
     //
+    use Filterable;
     protected $fillable = [
         'type',
         'symbol',
@@ -44,8 +46,4 @@ class Coin extends Model
     {
         return $this->getRouteKey();
     }
- 
-
-
-
 }

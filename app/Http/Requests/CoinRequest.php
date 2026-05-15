@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-
+use Override;
 
 class CoinRequest extends BaseRequest
 {
@@ -21,6 +21,18 @@ class CoinRequest extends BaseRequest
      */
 
     public function rulesGet(): array
+    {
+        return [
+            'type'      => 'nullable|string|max:255',
+            'symbol'    => 'nullable|string|max:255',
+            'page'      => 'nullable|integer|min:1',
+            'limit'     => 'nullable|integer|min:1|max:100',
+            'sort'      => 'nullable|string|in:id,created_at',
+            'direction' => 'nullable|string|in:asc,desc',
+        ];
+    }
+
+    public function rulesShow(): array
     {
         return [
             'id' => 'string|max:255',

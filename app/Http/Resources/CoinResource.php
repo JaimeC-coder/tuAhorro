@@ -16,6 +16,7 @@ class CoinResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'type' => $this->type,
             'symbol' => $this->symbol,
             'created_at' => Carbon::parse($this->updated_at)->diffForHumans(),
