@@ -12,17 +12,25 @@ use Livewire\Component;
 class Create extends Component
 {
 
-    public $person;
-    public $amount;
-    public $type_loans;
-    public $loan_details = [];
-    public $date_init;
-    public $loan_details_description;
-    public $loan_details_amount;
-    public $loan_details_type_loans;
-    public $loan_details_date;
-    public $number_loans_cuota;
-    public $type_loans_cuota;
+    public ?string $person = null;
+    public ?float $amount = null;
+    public ?string $type_loans = null;
+    public ?string $date_init = null;
+    public ?int $number_loans_cuota = null;
+    public ?string $type_loans_cuota = null;
+
+    public array $loan_details = [];  // ← solo almacena los detalles guardados
+
+    public array $newDetail = [       // ← solo el formulario temporal
+        'description' => '',
+        'amount'      => '',
+        'type'        => '',
+        'date'        => '',
+    ];
+    // public ?string $loan_details_description = null;
+    // public ?float $loan_details_amount = null;
+    // public ?string $loan_details_type_loans = null;
+    // public ?string $loan_details_date = null;
 
 
     public function mount()
@@ -33,22 +41,46 @@ class Create extends Component
 
     public function addLoanDetail()
     {
-        $this->loan_details[] = [
-            'description' => $this->loan_details_description,
-            'amount' => $this->loan_details_amount,
-            'type' => $this->loan_details_type_loans,
-            'date' => $this->loan_details_date ?? now()->toDateString(),
-        ];
+        try {
+            $this->validate([
+                'newDetail.description' => 'nullable|string|max:255',
+                'newDetail.amount'      => 'required|numeric|min:0.01',
+                'newDetail.type'        => 'required|in:prestamo,adelanto',
+                'newDetail.date'        => 'nullable|date',
+            ], [
+                'newDetail.amount.required' => 'El monto es obligatorio.',
+                'newDetail.amount.numeric'  => 'El monto debe ser un número.',
+                'newDetail.amount.min'      => 'El monto debe ser al menos 0.01.',
+                'newDetail.type.required'   => 'El tipo es obligatorio.',
+                'newDetail.type.in'         => 'El tipo debe ser "prestamo" o "adelanto".',
+            ],[
+                'newDetail.description' => 'Descripción',
+                'newDetail.amount'      => 'Monto',
+                'newDetail.type'        => 'Tipo',
+                'newDetail.date'        => 'Fecha',
+            ]);
 
-        // dd($this);
-        // Reset the input fields
-        $this->loan_details_description = '';
-        $this->loan_details_amount = '';
-        $this->loan_details_type_loans = '';
-        $this->loan_details_date = '';
+            $this->loan_details[] = [
+                'description' => $this->newDetail['description'],
+                'amount' => $this->newDetail['amount'],
+                'type' => $this->newDetail['type'],
+                'date' => $this->newDetail['date'] ?? now()->toDateString(),
+            ];
+
+            // Limpiar el formulario temporal
+            $this->newDetail = [
+                'description' => '',
+                'amount'      => '',
+                'type'        => '',
+                'date'        => '',
+            ];
+        } catch (ValidationException $e) {
+            Log::info('Errores de validación: ', $e->errors());
+            throw $e; // ← importante relanzarlo para que Livewire maneje los errores en el blade
+        }
     }
 
-    public function removeLoanDetail($index)
+    public function removeLoanDetail(int $index)
     {
         unset($this->loan_details[$index]);
         $this->loan_details = array_values($this->loan_details); // Reindex the array
@@ -58,25 +90,28 @@ class Create extends Component
     {
         try {
             $request = new LoanRequest();
-
-
-            $this->validate(
-                // $request->rulesForAction('POST'),, //opcion que se puede usar es esta
-                $request->rulesPost(),
-                $request->messages()
-            );
-
+            // $request->rulesForAction('POST'),, //opcion que se puede usar es esta
+            $this->validate($request->rulesPost(), $request->messages());
+            $details = $this->loan_details;
+            $amount = $this->amount;
 
             if ($this->type_loans == 'cuota') {
-                $arrayCuotas = $this->saveCuote($this->number_loans_cuota, $this->amount, $this->type_loans_cuota, $this->date_init);
-                $this->loan_details = array_merge($this->loan_details, $arrayCuotas);
+                $cuotas = $service->buildCuotas($this->number_loans_cuota, $this->amount, $this->type_loans_cuota, $this->date_init);
+                $details = array_merge($details, $cuotas);
             } elseif ($this->type_loans == 'prestamo') {
-                $this->amount = $this->savePrestamo($this->loan_details);
+                $amount = $service->calculatePrestamoAmount($this->loan_details);
             }
 
-            $loanDto = LoanDTO::fromLivewire($this);
-            Log::info('LoanDTO creado: ', $loanDto->toArray());
-            $loans = $service->create($loanDto);
+            // $loanDto = LoanDTO::fromLivewire($this);
+
+            $loanDto = LoanDTO::fromLivewire([
+                'person'     => $this->person,
+                'amount'     => $amount,
+                'type_loans' => $this->type_loans,
+                'date_init'  => $this->date_init,
+                'details'    => $details,
+            ]);
+            $service->create($loanDto);
 
 
             session()->flash('message', 'Préstamo creado exitosamente.');
@@ -87,55 +122,7 @@ class Create extends Component
         }
     }
 
-    protected function saveCuote($number_loans_cuota, $amount, $type_loans_cuota, $date_init)
-    {
-        //agregar el valor del prestamo a mi Loan
 
-        $arrayCuotas = [];
-        $porcentage = 10;
-
-        if ($number_loans_cuota > 1 && $amount > 100) {
-            $porcentage = 20;
-        }
-        $amount = $amount + ($amount * $porcentage / 100);
-        $cuotaAmount = $amount / $number_loans_cuota;
-
-        $cuotaAmount = round($cuotaAmount, 2);
-
-        foreach (range(1, $number_loans_cuota) as $index) {
-
-            if ($type_loans_cuota === 'semanal') {
-                $cuotaDate = \Carbon\Carbon::parse($date_init)->addWeeks($index - 1)->toDateString();
-            } elseif ($type_loans_cuota === 'mensual') {
-                $cuotaDate = \Carbon\Carbon::parse($date_init)->addMonths($index - 1)->toDateString();
-            }
-            $cuota = [
-                'description' => "Cuota {$index}",
-                'amount' => $cuotaAmount,
-                'type' => 'cuota',
-                'date' => $cuotaDate,
-            ];
-
-            $arrayCuotas[] = $cuota;
-        }
-        return $arrayCuotas;
-    }
-
-    public function savePrestamo($loan_details)
-    {
-        $totalAmount = 0;
-        foreach ($loan_details as $detail) {
-
-            if ($detail['type'] == 'prestamo') {
-                $totalAmount += $detail['amount'];
-            } elseif ($detail['type'] == 'adelanto') {
-                $totalAmount -= $detail['amount'];
-            } else {
-                $totalAmount += 0;
-            }
-        }
-        return $totalAmount;
-    }
 
 
     public function render()

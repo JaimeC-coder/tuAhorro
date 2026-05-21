@@ -3,6 +3,7 @@
 namespace App\DTOs\Filter;
 
 use App\Http\Requests\LoanRequest;
+use Illuminate\Support\Facades\Log;
 
 class LoanFilterDTO implements FilterDTOInterfaseDTO
 {

@@ -2,74 +2,64 @@
 
 namespace App\DTOs;
 
-use App\Http\Requests\LoanRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LoanDTO
 {
+    private const UNDEFINED = '__UNDEFINED__';
 
+    public function __construct(
+        public readonly ?int    $id           = null,
+        public readonly mixed   $person       = self::UNDEFINED,
+        public readonly mixed   $amount       = self::UNDEFINED,
+        public readonly mixed   $type_loans   = self::UNDEFINED,
+        public readonly mixed   $date_init    = self::UNDEFINED,
+        public readonly mixed   $loan_details = self::UNDEFINED,
+        public readonly ?int    $user_id      = null,
+    ) {}
 
-    public ?string $id;
-
-
-    public string $person;
-    public string $amount;
-    public string $type_loans;
-    public array $loan_details = [];
-    public string $user_id;
-    // public string $date_init;
-    // public string $loan_details_description;
-    // public string $loan_details_amount;
-    // public string $loan_details_type_loans;
-    // public string $loan_details_date;
-    // public string $number_loans_cuota;
-    // public string $type_loans_cuota;
-
-
-
-
-    public function __construct(string $person, string $amount, string $type_loans, ?string $id = null, array $loan_details = [], string $user_id = '')
-    {
-        $this->person = $person;
-        $this->amount = $amount;
-        $this->type_loans = $type_loans;
-        $this->id = $id;
-        $this->user_id = $user_id;
-        $this->loan_details = $loan_details;
-    }
-
-    public static function fromRequest(LoanRequest $data): self
+    public static function fromArrayAPI(array $data): self
     {
         return new self(
-            $data->input('person'),
-            $data->input('amount'),
-            $data->input('type_loans'),
-            $data->input('id'),
-            $data->input('loan_details', [])
+            id: $data['id']           ?? null,
+            person: array_key_exists('person', $data)       ? $data['person']       : self::UNDEFINED,
+            amount: array_key_exists('amount', $data)       ? (float) str_replace(',', '', $data['amount']) : self::UNDEFINED,
+            type_loans: array_key_exists('type_loans', $data)   ? $data['type_loans']   : self::UNDEFINED,
+            date_init: array_key_exists('date_init', $data)    ? $data['date_init']    : self::UNDEFINED,
+            loan_details: array_key_exists('loan_details', $data) ? $data['loan_details'] : self::UNDEFINED,
+            user_id: Auth::guard('api')->id(),
+        );
+    }
+    public static function fromArraywEB(array $data): self
+    {
+        return new self(
+            id: $data['id']           ?? null,
+            person: array_key_exists('person', $data)       ? $data['person']       : self::UNDEFINED,
+            amount: array_key_exists('amount', $data)       ? (float) str_replace(',', '', $data['amount']) : self::UNDEFINED,
+            type_loans: array_key_exists('type_loans', $data)   ? $data['type_loans']   : self::UNDEFINED,
+            date_init: array_key_exists('date_init', $data)    ? $data['date_init']    : self::UNDEFINED,
+            loan_details: array_key_exists('loan_details', $data) ? $data['loan_details'] : self::UNDEFINED,
+            user_id: Auth::id(),
         );
     }
 
-    public static function fromLivewire(object $component): self
+    public function has(string $field): bool
     {
-        return new self(
-            person: $component->person,
-            amount: $component->amount,
-            type_loans: $component->type_loans,
-            id: $component->id ?? null,
-            loan_details: $component->loan_details,
-            user_id: Auth::id()
-        );
+        return $this->$field !== self::UNDEFINED;
     }
 
     public function toArray(): array
     {
-        return [
-            'person' => $this->person,
-            'amount' => $this->amount,
-            'type_loans' => $this->type_loans,
-            'id' => $this->id,
-            'loan_details' => $this->loan_details,
-            'user_id' => $this->user_id,
-        ];
+        $fields = ['person', 'amount', 'type_loans', 'date_init', 'loan_details', 'user_id'];
+        $result = [];
+
+        foreach ($fields as $field) {
+            if ($this->has($field)) {
+                $result[$field] = $this->$field;
+            }
+        }
+
+        return $result;
     }
 }

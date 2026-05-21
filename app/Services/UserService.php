@@ -19,7 +19,7 @@ class UserService
 
     public function getAllUsers(UserFilterDTO $userDTO)
     {
-        return $this->UserRepository->all($userDTO->toArray());
+        return $this->UserRepository->all($userDTO);
     }
 
 

@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('person');
-            $table->string('amount');
+            $table->string('type_loans')->default('prestamo');
+            $table->decimal('amount', 15, 2);
+            $table->enum('type', ['pendiente', 'pagado'])->default('pendiente');
             $table->decimal('porcent', 5, 2)->default(0);
             $table->timestamps();
         });

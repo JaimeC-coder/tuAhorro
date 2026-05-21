@@ -2,15 +2,22 @@
 
 namespace App\Helpers;
 
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+
 class ResourceViewHelper
 {
-    public static function paginate($resource, $request)
+    public static function paginate(ResourceCollection $resource, Request $request): array
     {
+        $links = $resource->resource->toArray();
+
+        unset($links['data']);
+
         return [
             'data' => $resource->collection->map->toArray($request),
             'paginator' => [
                 "current_page" => $resource->currentPage(),
-                "links" =>  $resource->resource,
+                "links" =>   $links['links'] ?? [],
                 "first_page_url" => $resource->url(1),
                 "from" => $resource->firstItem(),
                 "last_page" => $resource->lastPage(),

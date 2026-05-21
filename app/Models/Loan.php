@@ -18,6 +18,7 @@ class Loan extends Model
         'user_id'
     ];
 
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -27,7 +28,6 @@ class Loan extends Model
     {
         return $this->hasMany(LoanDetails::class);
     }
-
 
     public function getRouteKeyName()
     {
@@ -44,7 +44,8 @@ class Loan extends Model
     }
     public function getAmountAttribute($value)
     {
-        return number_format($value, 2);
+        $clean = str_replace(',', '', $value);
+        return number_format((float) $clean, 2);
     }
     public function getRemainingAmountAttribute($value)
     {

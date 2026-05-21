@@ -8,6 +8,15 @@ abstract class BaseRequest extends FormRequest
 {
     public function rules(): array
     {
+
+        // Especificaciones para estos casos especificos :
+        $action = $this->route()->getActionMethod();
+        if (method_exists($this, 'rulesFor' . ucfirst($action))) {
+            return $this->{'rulesFor' . ucfirst($action)}();
+        }
+        //No es necesario implementar esta forma para otros proyectos, pero es una forma de organizar las reglas por acción.
+
+
         if ($this->isMethod('GET') && $this->route()?->hasParameters()) {
             return $this->rulesShow();
         }

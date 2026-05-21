@@ -14,7 +14,7 @@ use App\Services\LoanService;
 class LoanWebController extends Controller
 {
 
-    protected $loanService;
+    protected LoanService $loanService;
 
     public function __construct(LoanService $loanService)
     {
