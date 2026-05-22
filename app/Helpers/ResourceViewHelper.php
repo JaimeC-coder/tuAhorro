@@ -31,4 +31,12 @@ class ResourceViewHelper
             ]
         ];
     }
+
+    public static function paginateWeb(ResourceCollection $resource, Request $request): array
+    {
+        return [
+            'data'      => $resource->collection->map->toArray($request),
+            'paginator' => $resource->resource, // ← objeto paginador real, no array
+        ];
+    }
 }

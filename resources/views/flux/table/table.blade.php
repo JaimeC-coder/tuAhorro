@@ -51,7 +51,7 @@
     {{-- Paginación --}}
     @if ($paginate)
         <div class="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700">
-            {{ $paginate['links'] }}
+            {{ $paginate->links() }}
         </div>
     @endif
 

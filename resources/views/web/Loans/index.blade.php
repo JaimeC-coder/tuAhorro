@@ -4,58 +4,68 @@
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <div
                 class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern
-                    class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+                <flux:card>
+                    <x-slot:heading>
+                        <div class="flex items-center gap-4">
+                            <flux:icon.arrow-trending-up class="text-green-600 dark:text-green-500 size-32" />
+                            <div class="">
+                                <flux:heading size="xl" class="mb-1">Ingresos</flux:heading>
+                                <flux:heading size="2xl" class="mb-1">S/.
+                                    {{ number_format($information['total_positive_amount'], 2) }}</flux:heading>
+                            </div>
+                        </div>
+                    </x-slot:heading>
+                    <x-slot:text>
+
+                    </x-slot:text>
+
+
+
+                </flux:card>
             </div>
             <div
                 class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern
-                    class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+                <flux:card>
+                    <x-slot:heading>
+                        <div class="flex items-center gap-4">
+                            @if ($information['total_amount'] > 0)
+                                <flux:icon.arrow-trending-up class="text-green-600 dark:text-green-500 size-32" />
+                            @else
+                                <flux:icon.arrow-trending-down class="text-red-600 dark:text-red-500 size-32" />
+                            @endif
+                            <div class="">
+                                <flux:heading size="xl" class="mb-1">Balance</flux:heading>
+                                <flux:heading size="2xl" class="mb-1">S/.
+                                    {{ $information['total_amount'] }}</flux:heading>
+                            </div>
+                        </div>
+                    </x-slot:heading>
+                    <x-slot:text>
+
+                    </x-slot:text>
+
+
+                </flux:card>
             </div>
             <div
                 class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern
-                    class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+                <flux:card>
+                    <x-slot:heading>
+                        <div class="flex items-center gap-4">
+                            <flux:icon.arrow-trending-down class="text-red-600 dark:text-red-500 size-32" />
+                            <div class="flex flex-col gap-2">
+                                <flux:heading size="xl" class="mb-1">Egresos</flux:heading>
+                                <flux:heading size="2xl" class="mb-1">S/.
+                                    {{ $information['total_negative_amount'] }}</flux:heading>
+                            </div>
+                        </div>
+                    </x-slot:heading>
+                    <x-slot:text>
+
+                    </x-slot:text>
+                </flux:card>
             </div>
         </div>
-        <div class="relative h-full flex-1 overflow-hidden rounded-xl
-         ">
-
-
-            <flux:table :paginate="$paginator" class=" text-sm text-left">
-                <x-slot:create>
-                    <flux:button variant="primary" size="sm" icon="plus" href="{{ route('loans.create') }}">
-                        Nueva Prestamo
-                    </flux:button>
-                </x-slot:create>
-                <flux:table.columns>
-
-                    <flux:table.column>#</flux:table.column>
-                    <flux:table.column>Persona</flux:table.column>
-                    <flux:table.column>Monto</flux:table.column>
-                    <flux:table.column>Fecha de creación</flux:table.column>
-                    <flux:table.column>Acciones</flux:table.column>
-                </flux:table.columns>
-                <flux:table.rows>
-                    @foreach ($data as $loan)
-                        <flux:table.row :key="$loan['id']">
-                            <flux:table.cell>{{ $loan['id'] }}</flux:table.cell>
-                            <flux:table.cell>{{ $loan['person'] }}</flux:table.cell>
-                            <flux:table.cell>{{ $loan['amount'] }}</flux:table.cell>
-                            <flux:table.cell>{{ $loan['created_at'] }}</flux:table.cell>
-                            <flux:table.cell>
-                                <flux:button variant="ghost" size="sm" icon="pencil" href="{{ route('loans.edit', $loan['id']) }}">
-                                </flux:button>
-                                <flux:button variant="ghost" size="sm" icon="plus-circle" href="{{ route('loans.edit', $loan['id']) }}">
-                                </flux:button>
-
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @endforeach
-                </flux:table.rows>
-            </flux:table>
-
-
-        </div>
+        @livewire('loans.index')
     </div>
 </x-layouts.app>

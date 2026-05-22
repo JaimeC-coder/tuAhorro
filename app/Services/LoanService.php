@@ -20,6 +20,10 @@ class LoanService
         return $this->loanRepository->create($dto->toArray());
     }
 
+    public function getInformation(){
+        return $this->loanRepository->getInformation();
+    }
+
     public function getAllLoans(LoanFilterDTO $dto)
     {
         return $this->loanRepository->all($dto);

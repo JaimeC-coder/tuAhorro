@@ -14,6 +14,21 @@ class LoanRepository extends BaseRepository
     }
 
 
+    public function getInformation(): array
+    {
+
+        $totalNegativeAmount = $this->model->where('amount', '<', 0)->sum('amount');
+        $totalPositivoAmount = $this->model->where('amount', '>', 0)->sum('amount');
+        $totalAmount = $this->model->sum('amount');
+
+        return [
+            'total_negative_amount' => $totalNegativeAmount,
+            'total_positive_amount' => $totalPositivoAmount,
+            'total_amount' => $totalAmount,
+        ];
+    }
+
+
     public function create(array $data): Model
     {
         return $this->transaction(function () use ($data) {

@@ -19,17 +19,16 @@ class LoanResource extends JsonResource
             'person' => $this->person,
             'amount' => $this->amount,
             'type_loans' => $this->type_loans,
-            'loan_details' =>
-                $this->details->map(function ($detail) {
-                    return [
-                        'id' => $detail->id,
-                        'amount' => $detail->amount,
-                        'type' => $detail->type,
-                        'date' => $detail->date,
-                        'description' => $detail->description,
-                    ];
-                }),
             'created_at' => $this->created_at->toDateTimeString(),
+            'loan_details' => $this->details->transform(fn($detail) => [
+                'id' => $detail->id,
+                'amount' =>"S/.". $detail->amount,
+                'type' => $detail->type,
+                'date' => $detail->date,
+                'description' => $detail->description,
+                'created_at' => $detail->created_at->toDateTimeString(),
+
+            ]),
         ];
     }
 }

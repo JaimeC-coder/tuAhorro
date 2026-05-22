@@ -33,8 +33,10 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 
     Route::resource('coins', CoinWebController::class)->except(['update', 'destroy', 'store']);
-    Route::resource('loans', LoanWebController::class)->except(['update', 'destroy', 'store']);
+    Route::resource('loans', LoanWebController::class)->except(['update', 'destroy', 'store', 'show']);
     Route::resource('savings', SavingWebController::class)->except(['update', 'destroy', 'store']);
 });
+
+Route::get('loans/{loan}', [LoanWebController::class, 'show'])->name('loans.show');
 
 require __DIR__ . '/auth.php';

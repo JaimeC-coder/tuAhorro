@@ -1,61 +1,57 @@
-<x-layouts.app :title="__('Loans')">
+<x-layouts.app.header :title="$loan['person'] ?? null">
 
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div class="">
             <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern
-                    class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern
-                    class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern
-                    class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
+                class="relative  overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                <flux:card>
+                    <x-slot:heading>
+                        Información del préstamo
+                    </x-slot:heading>
+                    <x-slot:text>
+
+                    </x-slot:text>
+
+                    <x-slot:content>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2">
+                                <flux:badge color="blue">Persona</flux:badge>
+                                <flux:text>{{ $loan['person'] }}</flux:text>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <flux:badge color="blue">Monto total</flux:badge>
+                                <flux:text>{{ $loan['amount'] }}</flux:text>
+                            </div>
+
+                        </div>
+                    </x-slot:content>
+
+                </flux:card>
             </div>
         </div>
         <div class="relative h-full flex-1 overflow-hidden rounded-xl
          ">
-
-
-            <flux:table.table :paginate="$paginator" class=" text-sm text-left">
-                <x-slot:create>
-                    <flux:button variant="primary" size="sm" icon="plus" href="{{ route('loans.create') }}">
-                        Nueva Prestamo
-                    </flux:button>
-                </x-slot:create>
+            <flux:table  class=" text-sm text-left">
                 <flux:table.columns>
-
                     <flux:table.column>#</flux:table.column>
-                    <flux:table.column>Persona</flux:table.column>
                     <flux:table.column>Monto</flux:table.column>
+                    <flux:table.column>Descripcion</flux:table.column>
                     <flux:table.column>Fecha de creación</flux:table.column>
-                    <flux:table.column>Acciones</flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
-                    @foreach ($data as $loan)
-                        <flux:table.row :key="$loan['id']">
-                            <flux:table.cell>{{ $loan['id'] }}</flux:table.cell>
-                            <flux:table.cell>{{ $loan['person'] }}</flux:table.cell>
-                            <flux:table.cell>{{ $loan['amount'] }}</flux:table.cell>
-                            <flux:table.cell>{{ $loan['created_at'] }}</flux:table.cell>
-                            <flux:table.cell>
-                                <flux:button variant="ghost" size="sm" icon="pencil" href="{{ route('loans.edit', $loan['id']) }}">
-                                </flux:button>
-                                <flux:button variant="ghost" size="sm" icon="diamond-plus" href="{{ route('loans.edit', $loan['id']) }}">
-                                </flux:button>
-
-                            </flux:table.cell>
+                    @foreach ($loan['loan_details'] as $key => $lo)
+                        <flux:table.row class="border-b border-neutral-200 dark:border-neutral-700">
+                            <flux:table.cell>{{ $key + 1 }}</flux:table.cell>
+                            <flux:table.cell>{{ $lo['amount'] }}</flux:table.cell>
+                            <flux:table.cell>{{ $lo['description'] }}</flux:table.cell>
+                            <flux:table.cell>{{ $lo['created_at'] }}</flux:table.cell>
                         </flux:table.row>
                     @endforeach
                 </flux:table.rows>
-            </flux:table.table>
+            </flux:table>
 
 
         </div>
     </div>
-</x-layouts.app>
+
+</x-layouts.app.header>

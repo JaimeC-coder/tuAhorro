@@ -8,6 +8,7 @@ use App\Services\LoanService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Flux\Flux;
 
 class Create extends Component
 {
@@ -53,7 +54,7 @@ class Create extends Component
                 'newDetail.amount.min'      => 'El monto debe ser al menos 0.01.',
                 'newDetail.type.required'   => 'El tipo es obligatorio.',
                 'newDetail.type.in'         => 'El tipo debe ser "prestamo" o "adelanto".',
-            ],[
+            ], [
                 'newDetail.description' => 'Descripción',
                 'newDetail.amount'      => 'Monto',
                 'newDetail.type'        => 'Tipo',
@@ -104,7 +105,7 @@ class Create extends Component
 
             // $loanDto = LoanDTO::fromLivewire($this);
 
-            $loanDto = LoanDTO::fromLivewire([
+            $loanDto = LoanDTO::fromArraywEB([
                 'person'     => $this->person,
                 'amount'     => $amount,
                 'type_loans' => $this->type_loans,
@@ -114,16 +115,13 @@ class Create extends Component
             $service->create($loanDto);
 
 
-            session()->flash('message', 'Préstamo creado exitosamente.');
+            // session()->flash('message', 'Préstamo creado exitosamente.');
             return redirect()->route('loans.index');
         } catch (ValidationException $e) {
             Log::info('Errores de validación: ', $e->errors());
             throw $e; // ← importante relanzarlo para que Livewire maneje los errores en el blade
         }
     }
-
-
-
 
     public function render()
     {

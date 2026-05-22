@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoanRequest;
 use App\Http\Resources\LoanResource;
 use App\Services\LoanService;
+use Illuminate\Support\Facades\Log;
 
 class LoanWebController extends Controller
 {
@@ -24,16 +25,11 @@ class LoanWebController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $loanRequest = LoanRequest::createFrom($request);
-        $loanDTO = LoanFilterDTO::fromRequest($loanRequest);
-        // return $loanDTO;
-        $loans = $this->loanService->getAllLoans($loanDTO);
-        $loans = LoanResource::collection($loans);
 
-        $loans = ResourceViewHelper::paginate($loans, $request);
-        return view('web.loans.index', $loans);
+        $information = $this->loanService->getInformation();
+        return view('web.loans.index', compact('information'));
     }
 
     /**
@@ -48,9 +44,12 @@ class LoanWebController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(loan $loan)
     {
-        return view('web.loans.show');
+        $loanResource = new LoanResource($loan);
+        $loan = $loanResource->resolve();
+
+        return view('web.loans.show', compact('loan'));
     }
 
     /**
