@@ -37,6 +37,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('savings', SavingWebController::class)->except(['update', 'destroy', 'store']);
 });
 
-Route::get('loans/{loan}', [LoanWebController::class, 'show'])->name('loans.show');
+Route::get('loans/{id}', [LoanWebController::class, 'show'])->name('loans.show');
 
 require __DIR__ . '/auth.php';

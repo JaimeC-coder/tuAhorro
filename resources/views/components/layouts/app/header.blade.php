@@ -93,10 +93,10 @@
     </flux:sidebar>
 
     {{ $slot }}
-
+    <livewire:reusable.toastnotification />
     @fluxScripts
 
-    @livewire('toast-notification')
+
 </body>
 
 </html>

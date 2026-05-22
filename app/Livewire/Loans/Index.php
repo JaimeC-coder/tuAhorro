@@ -9,17 +9,17 @@ use App\Http\Resources\LoanResource;
 use App\Services\LoanService;
 use Illuminate\Http\Request;
 use Livewire\Component;
-use Flux\Flux;
+use Illuminate\Support\Facades\Crypt;
+
 
 class Index extends Component
 {
 
-
     public function showLoan(int $loanId)
     {
-        $text = "hola como estas";
-       $this->dispatch('copy-to-clipboard', text: $text);
-        // return redirect()->route('loans.show', $loanId);
+        $idEncriptado = Crypt::encryptString($loanId);
+        $url = route('loans.show', ['id' => $idEncriptado]);
+        $this->dispatch('copy-to-clipboard', text: $url);
     }
 
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoanRequest;
 use App\Http\Resources\LoanResource;
 use App\Services\LoanService;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 
 class LoanWebController extends Controller
@@ -44,12 +45,24 @@ class LoanWebController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(loan $loan)
+    public function show(Request $request, String $id)
     {
-        $loanResource = new LoanResource($loan);
-        $loan = $loanResource->resolve();
 
-        return view('web.loans.show', compact('loan'));
+        try {
+            $idReal = Crypt::decryptString($id);
+            $loan = Loan::findOrFail($idReal); // tú haces el binding manual
+            session(['ultima_url_producto' => $request->fullUrl()]);
+
+            $loanResource = new LoanResource($loan);
+            $loan = $loanResource->resolve();
+            return view('web.loans.show', compact('loan'));
+
+        } catch (\Exception $e) {
+            $ultimaUrl = session('ultima_url_producto');
+            return $ultimaUrl
+                ? redirect($ultimaUrl)
+                : redirect()->route('producto.index');
+        }
     }
 
     /**
