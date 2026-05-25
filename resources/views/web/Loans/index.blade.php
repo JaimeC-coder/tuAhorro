@@ -28,7 +28,7 @@
                 <flux:card>
                     <x-slot:heading>
                         <div class="flex items-center gap-4">
-                            @if ($information['total_amount'] > 0)
+                            @if ($information['totalAmountPrestamo'] > 0)
                                 <flux:icon.arrow-trending-up class="text-green-600 dark:text-green-500 size-32" />
                             @else
                                 <flux:icon.arrow-trending-down class="text-red-600 dark:text-red-500 size-32" />
@@ -36,7 +36,7 @@
                             <div class="">
                                 <flux:heading size="xl" class="mb-1">Balance</flux:heading>
                                 <flux:heading size="2xl" class="mb-1">S/.
-                                    {{ number_format($information['total_amount'], 2) }}
+                                    {{ number_format($information['totalAmountPrestamo'], 2) }}
                                     </flux:heading>
                             </div>
                         </div>

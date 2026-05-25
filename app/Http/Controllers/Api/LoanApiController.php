@@ -52,7 +52,7 @@ class LoanApiController extends Controller
                 $amount = $this->loanService->calculatePrestamoAmount($request->loan_details);
             }
             $loanDto = LoanDTO::fromArrayAPI(array_merge($request->validated(), [
-                'amount'       => $amount,
+                'amount'       => number_format((float) $amount, 2, '.', ''),
                 'loan_details' => $details,
             ]));
             return $this->loanService->create($loanDto);

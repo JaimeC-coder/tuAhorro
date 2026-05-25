@@ -33,7 +33,7 @@ class CoinWebController extends Controller
         $coins = $this->coinService->getAllCoins($coinDTO);
         $coins = CoinResource::collection($coins);
 
-       $coins = ResourceViewHelper::paginate($coins, $request);
+       $coins = ResourceViewHelper::paginateWeb($coins, $request);
         return view('web.coins.index', $coins);
     }
 

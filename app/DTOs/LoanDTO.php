@@ -23,7 +23,7 @@ class LoanDTO implements InterfaseDTO
         return new self(
             id: $data['id']           ?? null,
             person: array_key_exists('person', $data)       ? $data['person']       : self::UNDEFINED,
-            amount: array_key_exists('amount', $data)       ? (float) str_replace(',', '', $data['amount']) : self::UNDEFINED,
+            amount: array_key_exists('amount', $data)       ? number_format((float) $data['amount'], 2, '.', '') : self::UNDEFINED,
             type_loans: array_key_exists('type_loans', $data)   ? $data['type_loans']   : self::UNDEFINED,
             date_init: array_key_exists('date_init', $data)    ? $data['date_init']    : self::UNDEFINED,
             loan_details: array_key_exists('loan_details', $data) ? $data['loan_details'] : self::UNDEFINED,
@@ -35,7 +35,7 @@ class LoanDTO implements InterfaseDTO
         return new self(
             id: $data['id']           ?? null,
             person: array_key_exists('person', $data)       ? $data['person']       : self::UNDEFINED,
-            amount: array_key_exists('amount', $data)       ? (float) str_replace(',', '', $data['amount']) : self::UNDEFINED,
+            amount: array_key_exists('amount', $data)       ? number_format((float) $data['amount'], 2, '.', '') : self::UNDEFINED,
             type_loans: array_key_exists('type_loans', $data)   ? $data['type_loans']   : self::UNDEFINED,
             date_init: array_key_exists('date_init', $data)    ? $data['date_init']    : self::UNDEFINED,
             loan_details: array_key_exists('loan_details', $data) ? $data['loan_details'] : self::UNDEFINED,

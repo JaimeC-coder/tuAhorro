@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Loan;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class LoanRepository extends BaseRepository
 {
@@ -20,26 +21,30 @@ class LoanRepository extends BaseRepository
 
         $basequery = $this->model->where('user_id', auth()->id());
 
+        $totalNegativePrestamo =  (clone $basequery)->where('amount', '<', 0)->where('type_loans', 'prestamo')->sum('amount');
+        $totalPositivoAmountPrestamo = (clone $basequery)->where('amount', '>', 0)->where('type_loans', 'prestamo')->sum('amount');
 
-        $totalNegativePrestamo = $basequery->where('amount', '<', 0)->where('type_loans', 'prestamo')->sum('amount');
-        $totalPositivoAmountPrestamo = $basequery->where('amount', '>', 0)->where('type_loans', 'prestamo')->sum('amount');
-        $totalNegativeCuota = $basequery->where('amount', '<', 0)->where('type_loans', 'cuota')->sum('amount');
-        $totalPositivoAmountCuota = $basequery->where('amount', '>', 0)->where('type_loans', 'cuota')->sum('amount');
-        $totalAmount = $basequery->sum('amount');
+        $totalNegativeCuota = (clone $basequery)->where('amount', '<', 0)->where('type_loans', 'cuota')->sum('amount');
+        $totalPositivoAmountCuota = (clone $basequery)->where('amount', '>', 0)->where('type_loans', 'cuota')->sum('amount');
+        $totalAmountPrestamo = (clone $basequery)->where('type_loans', 'prestamo')->sum('amount');
+        $totalAmountCuota = (clone $basequery)->where('type_loans', 'cuota')->sum('amount');
 
         return [
             'total_negative_amount' => $totalNegativePrestamo,
             'total_positive_amount' => $totalPositivoAmountPrestamo,
             'total_negative_cuota' => $totalNegativeCuota,
             'total_positive_cuota' => $totalPositivoAmountCuota,
-            'total_amount' => $totalAmount,
+            'totalAmountPrestamo' => $totalAmountPrestamo,
+            'totalAmountCuota' => $totalAmountCuota,
         ];
     }
 
 
     public function create(array $data): Model
     {
+
         return $this->transaction(function () use ($data) {
+            Log::info('Loan created with ID: ' . json_encode($data));
             $loan = parent::create($data);
             if (isset($data['loan_details']) && is_array($data['loan_details'])) {
                 foreach ($data['loan_details'] as $detail) {
@@ -59,6 +64,12 @@ class LoanRepository extends BaseRepository
     {
 
         $loan = $this->find($id);
+
+        if(!$loan){
+            throw new \Exception('Préstamo no encontrado');
+        }
+
+
         foreach ($data['loan_details'] as $detail) {
             $loan->details()->create([
                 'description' => $detail['description'],

@@ -8,7 +8,7 @@ use App\DTOs\LoanDTO;
 
 class LoanService
 {
-    protected $loanRepository;
+    protected LoanRepository $loanRepository;
 
     public function __construct(LoanRepository $loanRepository)
     {
@@ -17,6 +17,7 @@ class LoanService
 
     public function create(LoanDTO $dto)
     {
+
         return $this->loanRepository->create($dto->toArray());
     }
 
@@ -93,7 +94,7 @@ class LoanService
     }
     public function calculatePrestamoAmount(array $details): float
     {
-        $totalAmount = 0;
+        $totalAmount = 0.0;
         foreach ($details as $detail) {
 
             if ($detail['type'] == 'prestamo') {
@@ -104,6 +105,6 @@ class LoanService
                 $totalAmount += 0;
             }
         }
-        return $totalAmount;
+        return number_format((float) $totalAmount, 2, '.', '');
     }
 }

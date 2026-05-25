@@ -42,7 +42,7 @@ abstract class BaseRepository
 
     public function create(array $data): Model
     {
-        return $this->handle(fn() => $this->model->create($data));
+        return $this->transaction(fn() => $this->model->create($data));
     }
 
     public function find(int|string $id): ?Model
@@ -72,7 +72,7 @@ abstract class BaseRepository
 
     public function update(int|string $id, array $data): Model
     {
-        return $this->handle(function () use ($id, $data) {
+        return $this->transaction(function () use ($id, $data) {
             $item = $this->model->find($id);
             if (!$item) {
                 throw new Exception('Registro no encontrado', 404);
@@ -84,7 +84,7 @@ abstract class BaseRepository
 
     public function delete(int|string $id): bool
     {
-        return $this->handle(function () use ($id) {
+        return $this->transaction(function () use ($id) {
             $item = $this->model->find($id);
             if (!$item) {
                 throw new Exception('Registro no encontrado', 404);

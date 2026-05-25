@@ -12,7 +12,7 @@ class UserDTO implements InterfaseDTO
         public readonly string $name = self::UNDEFINED,
         public readonly string $phone = self::UNDEFINED,
         public readonly string $email = self::UNDEFINED,
-        public readonly string $password = self::UNDEFINED,
+        public string $password = self::UNDEFINED,
         public readonly ?string $id = null
     ) {}
 

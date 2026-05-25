@@ -28,7 +28,7 @@ class Loan extends Model
 
     public function details()
     {
-        return $this->hasMany(LoanDetails::class);
+        return $this->hasMany(LoanDetails::class)->orderBy('id', 'desc');
     }
 
     public function getRouteKeyName()
@@ -46,12 +46,11 @@ class Loan extends Model
     }
     public function getAmountAttribute($value)
     {
-        $clean = str_replace(',', '', $value);
-        return number_format((float) $clean, 2);
+        return number_format((float) $value, 2, '.', '');
     }
     public function getRemainingAmountAttribute($value)
     {
-        return number_format($value, 2);
+        return number_format((float) $value, 2, '.', '');
     }
 
     public function setPersonAttribute($value)
@@ -64,10 +63,10 @@ class Loan extends Model
     }
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = number_format($value, 2);
+        $this->attributes['amount'] = number_format((float) $value, 2, '.', '');
     }
     public function setPorcentAttribute($value)
     {
-        $this->attributes['porcent'] = number_format($value, 2);
+        $this->attributes['porcent'] = number_format((float) $value, 2, '.', '');
     }
 }
