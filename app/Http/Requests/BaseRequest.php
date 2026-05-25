@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Response\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 abstract class BaseRequest extends FormRequest
 {
@@ -72,6 +73,7 @@ abstract class BaseRequest extends FormRequest
     {
 
         if ($this->expectsJson()) {
+            Log::info('Validation failed', ['errors' => $validator->errors()]);
             JsonResponse::error([
                 'errors' => $validator->errors()
             ], "Error de validación", false, 0, 422)->throwResponse();
