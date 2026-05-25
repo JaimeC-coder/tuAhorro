@@ -35,7 +35,7 @@ class UserRequest extends BaseRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users',
-            'phone' => 'required|string|regex:/^\+?[0-9]{7,15}$/',
+            'phone' => 'required|string|regex:/^\+?[0-9]{7,15}$/|unique:users',
             'password' => 'required|min:8|string|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
         ];
     }
@@ -45,7 +45,7 @@ class UserRequest extends BaseRequest
             'id' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email|unique:users,email,' . $this->id,
-            'phone' => 'required|string|regex:/^\+?[0-9]{7,15}$/',
+            'phone' => 'required|string|regex:/^\+?[0-9]{7,15}$/|unique:users,phone,' . $this->id,
             'password' => 'required|min:8|string|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
         ];
     }
@@ -65,6 +65,7 @@ class UserRequest extends BaseRequest
             'email.unique' => 'El correo electrónico ya está en uso.',
             'phone.required' => 'El teléfono es obligatorio.',
             'phone.regex' => 'El teléfono debe ser un número válido con un formato opcional de código de país.',
+            'phone.unique' => 'El teléfono ya está en uso.',
             'password.required' => 'La contraseña es obligatoria.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'password.regex' => 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.',

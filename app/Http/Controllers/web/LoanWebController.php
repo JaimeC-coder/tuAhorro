@@ -30,7 +30,7 @@ class LoanWebController extends Controller
     {
 
         $information = $this->loanService->getInformation();
-        return view('web.loans.index', compact('information'));
+        return view('web.Loans.index', compact('information'));
     }
 
     /**
@@ -38,7 +38,7 @@ class LoanWebController extends Controller
      */
     public function create()
     {
-        return view('web.loans.create');
+        return view('web.Loans.create');
     }
 
 
@@ -55,7 +55,7 @@ class LoanWebController extends Controller
 
             $loanResource = new LoanResource($loan);
             $loan = $loanResource->resolve();
-            return view('web.loans.show', compact('loan'));
+            return view('web.Loans.show', compact('loan'));
 
         } catch (\Exception $e) {
             $ultimaUrl = session('ultima_url_producto');
@@ -70,6 +70,6 @@ class LoanWebController extends Controller
      */
     public function edit()
     {
-        return view('web.loans.edit');
+        return view('web.Loans.edit');
     }
 }
