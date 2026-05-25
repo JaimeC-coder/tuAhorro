@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('description')->nullable();
             $table->enum('status', ['pendiente', 'pagado'])->default('pendiente');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

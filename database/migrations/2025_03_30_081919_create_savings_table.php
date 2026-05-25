@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->string('name');
             $table->decimal('remainingAmount', 15, 2)->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

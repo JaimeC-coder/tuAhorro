@@ -36,7 +36,8 @@
                             <div class="">
                                 <flux:heading size="xl" class="mb-1">Balance</flux:heading>
                                 <flux:heading size="2xl" class="mb-1">S/.
-                                    {{ $information['total_amount'] }}</flux:heading>
+                                    {{ number_format($information['total_amount'], 2) }}
+                                    </flux:heading>
                             </div>
                         </div>
                     </x-slot:heading>
@@ -56,7 +57,7 @@
                             <div class="flex flex-col gap-2">
                                 <flux:heading size="xl" class="mb-1">Egresos</flux:heading>
                                 <flux:heading size="2xl" class="mb-1">S/.
-                                    {{ $information['total_negative_amount'] }}</flux:heading>
+                                    {{ number_format($information['total_negative_amount'], 2) }}</flux:heading>
                             </div>
                         </div>
                     </x-slot:heading>

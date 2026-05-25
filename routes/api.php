@@ -16,7 +16,11 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('admin')->group(function () {
     Route::prefix('users')->group(function () {
-        Route::post('login', [ApiController::class, 'login'])->name('admin.user.login');
+        Route::post('login', [ApiController::class, 'login'])
+            ->middleware('throttle:5,1')
+            ->name('admin.user.login');
+        Route::post('register', [UserApiController::class, 'register'])
+        ->name('admin.users.store');
     });
 });
 
@@ -41,10 +45,8 @@ Route::middleware([IsUserAuth::class])->group(function () {
         Route::prefix('users')->group(function () {
             Route::post('me', [ApiController::class, 'authUser'])->name('admin.users.auth.me');
             Route::post('logout', [ApiController::class, 'logout'])->name('admin.users.auth.logout');
-            Route::post('/', [UserApiController::class, 'register'])->name('admin.users.store');
             Route::put('/', [UserApiController::class, 'actualizar'])->name('admin.users.update');
             Route::get('/', [UserApiController::class, 'listar'])->name('admin.users.index');
-            Route::put('/', [UserApiController::class, 'actualizar'])->name('admin.users.update');
             Route::delete('/', [UserApiController::class, 'eliminar'])->name('admin.users.destroy');
         });
     });

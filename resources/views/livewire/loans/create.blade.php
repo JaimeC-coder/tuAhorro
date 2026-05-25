@@ -100,7 +100,7 @@
                                                 </flux:select>
                                             </flux:table.cell>
                                             <flux:table.cell>
-                                                <flux:input type="number" step="0.01" min="0.01"
+                                                <flux:input type="number" step="0.01"
                                                     wire:model="loan_details.{{ $index }}.amount" />
                                             </flux:table.cell>
                                             <flux:table.cell>

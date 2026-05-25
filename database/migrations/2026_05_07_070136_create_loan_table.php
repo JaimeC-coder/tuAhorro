@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('loan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('person');
-            $table->string('type_loans')->default('prestamo');
             $table->decimal('amount', 15, 2);
-            $table->enum('type', ['pendiente', 'pagado'])->default('pendiente');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('type_loans', ['prestamo', 'cuota'])->default('prestamo');
+            $table->enum('type', ['pendiente', 'pagado','prestamo'])->default('pendiente');
             $table->decimal('porcent', 5, 2)->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

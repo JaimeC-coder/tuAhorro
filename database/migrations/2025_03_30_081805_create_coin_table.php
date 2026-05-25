@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('type')->unique();
             $table->string('symbol')->unique();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
