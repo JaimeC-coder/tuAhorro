@@ -17,13 +17,21 @@ class LoanRepository extends BaseRepository
     public function getInformation(): array
     {
 
-        $totalNegativeAmount = $this->model->where('amount', '<', 0)->sum('amount');
-        $totalPositivoAmount = $this->model->where('amount', '>', 0)->sum('amount');
-        $totalAmount = $this->model->sum('amount');
+
+        $basequery = $this->model->where('user_id', auth()->id());
+
+
+        $totalNegativePrestamo = $basequery->where('amount', '<', 0)->where('type_loans', 'prestamo')->sum('amount');
+        $totalPositivoAmountPrestamo = $basequery->where('amount', '>', 0)->where('type_loans', 'prestamo')->sum('amount');
+        $totalNegativeCuota = $basequery->where('amount', '<', 0)->where('type_loans', 'cuota')->sum('amount');
+        $totalPositivoAmountCuota = $basequery->where('amount', '>', 0)->where('type_loans', 'cuota')->sum('amount');
+        $totalAmount = $basequery->sum('amount');
 
         return [
-            'total_negative_amount' => $totalNegativeAmount,
-            'total_positive_amount' => $totalPositivoAmount,
+            'total_negative_amount' => $totalNegativePrestamo,
+            'total_positive_amount' => $totalPositivoAmountPrestamo,
+            'total_negative_cuota' => $totalNegativeCuota,
+            'total_positive_cuota' => $totalPositivoAmountCuota,
             'total_amount' => $totalAmount,
         ];
     }
@@ -37,7 +45,7 @@ class LoanRepository extends BaseRepository
                 foreach ($data['loan_details'] as $detail) {
                     $loan->details()->create([
                         'description' => $detail['description'],
-                        'amount' => $detail['amount'],
+                        'amount' => (float) str_replace(',', '', $detail['amount']),
                         'type' => $detail['type'],
                         'date' => $detail['date'] ?? now()->toDateString(),
                     ]);
@@ -54,17 +62,14 @@ class LoanRepository extends BaseRepository
         foreach ($data['loan_details'] as $detail) {
             $loan->details()->create([
                 'description' => $detail['description'],
-                'amount' => $detail['amount'],
+                'amount' => (float) str_replace(',', '', $detail['amount']),
                 'type' => $detail['type'],
                 'date' => $detail['date'] ?? now()->toDateString(),
             ]);
         }
         //* por el momento  convertimos el valor de  $loan['amount'] a float para sumarle el nuevo monto
-        $loanAmount = (float) str_replace(',', '', $loan['amount']);
 
-        $loan['amount'] = $loanAmount + (float) $data['amount'];
-
-        // Lo correcto seria : $loan['amount'] += (float) $data['amount']; pero por alguna razon no funciona el operador de asignacion compuesto
+        $loan['amount'] += (float) str_replace(',', '', $data['amount']); // pero por alguna razon no funciona el operador de asignacion compuesto
         $loan->save();
         return $loan;
     }

@@ -34,9 +34,9 @@ class UserRequest extends BaseRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'password' => 'required|string|max:255'
+            'email' => 'required|string|max:255|email|unique:users',
+            'phone' => 'required|string|regex:/^\+?[0-9]{7,15}$/',
+            'password' => 'required|min:8|string|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
         ];
     }
     public function rulesPut(): array
@@ -44,9 +44,9 @@ class UserRequest extends BaseRequest
         return [
             'id' => 'required|string|max:255',
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
+            'email' => 'required|string|max:255|email|unique:users,email,' . $this->id,
+            'phone' => 'required|string|regex:/^\+?[0-9]{7,15}$/',
+            'password' => 'required|min:8|string|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
         ];
     }
     public function rulesDestroy(): array
@@ -55,4 +55,31 @@ class UserRequest extends BaseRequest
             'id' => 'required|string|max:255',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'El nombre es obligatorio.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser una dirección de correo válida.',
+            'email.unique' => 'El correo electrónico ya está en uso.',
+            'phone.required' => 'El teléfono es obligatorio.',
+            'phone.regex' => 'El teléfono debe ser un número válido con un formato opcional de código de país.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.regex' => 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name' => 'nombre',
+            'email' => 'correo electrónico',
+            'phone' => 'teléfono',
+            'password' => 'contraseña',
+        ];
+    }
+
+
 }

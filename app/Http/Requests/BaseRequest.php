@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Response\JsonResponse;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class BaseRequest extends FormRequest
@@ -64,5 +66,17 @@ abstract class BaseRequest extends FormRequest
     protected function rulesPatch(): array
     {
         return [];
+    }
+
+    protected function failedValidation(Validator $validator): void
+    {
+
+        if ($this->expectsJson()) {
+            JsonResponse::error([
+                'errors' => $validator->errors()
+            ], "Error de validación", false, 0, 422)->throwResponse();
+        }
+        parent::failedValidation($validator);
+
     }
 }

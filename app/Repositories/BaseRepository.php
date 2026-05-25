@@ -33,10 +33,10 @@ abstract class BaseRepository
             return $callback();
         } catch (QueryException $e) {
             Log::error('Error de base de datos: ' . $e->getMessage());
-            throw new Exception('Error de base de datos: ' . $e->getMessage(), 400);
+            throw new Exception('Error de base de datos operacion fallida ' , 400);
         } catch (\Throwable $th) {
             Log::error('Error inesperado: ' . $th->getMessage());
-            throw new Exception('Error inesperado: ' . $th->getMessage(), 500);
+            throw new Exception('Error inesperado ', 500);
         }
     }
 

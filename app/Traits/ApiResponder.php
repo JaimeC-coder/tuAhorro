@@ -12,10 +12,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
-
 use Illuminate\Support\Facades\Log;
-
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 trait ApiResponder
 {

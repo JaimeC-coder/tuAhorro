@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\DTOs\UserDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsUserAuth;
 use App\Http\Resources\UserResource;
 use App\Http\Response\JsonResponse;
+use App\Services\UserService;
 use App\Traits\ApiResponder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -18,17 +20,17 @@ class ApiController extends Controller
 {
 
     use ApiResponder;
-    protected UserController $userController;
+    protected UserService $userService;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserService $userService)
     {
-        $this->userController = $userController;
+        $this->userService = $userService;
     }
 
     public function register(Request $request)
     {
         return $this->handleApiRequest(function () use ($request) {
-            return $this->userController->store($request);
+            return $this->userService->create(UserDTO::fromArrayAPI($request->validated()));
         }, 'Nuevo usuario creada correctamente', 201);
     }
 

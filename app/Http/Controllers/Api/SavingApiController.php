@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\DTOs\SavingDTO;
 use App\Http\Requests\SavingRequest;
+use App\Http\Controllers\Controller;
+
 use App\Http\Resources\SavingResource;
 use App\Models\Saving;
+use App\Services\SavingService;
 use Illuminate\Http\Request;
 
-class SavingController extends Controller
+class SavingApiController extends Controller
 {
-    protected $savingService;
-    public function __construct($savingService)
+    protected SavingService $savingService;
+    public function __construct(SavingService $savingService)
     {
         $this->savingService = $savingService;
     }
@@ -21,9 +24,9 @@ class SavingController extends Controller
     public function list(Request $request)
     {
         //
-        $request = SavingDTO::fromRequest($request);
-        $savings = $this->savingService->getAllSavings($request);
-        return SavingResource::collection($savings);
+        // $request = SavingDTO::fromRequest($request);
+        // $savings = $this->savingService->getAllSavings($request);
+        // return SavingResource::collection($savings);
 
     }
 
@@ -34,10 +37,10 @@ class SavingController extends Controller
     public function store(Request $request)
     {
         //
-        $request = SavingRequest::fromRequest($request);
-        $savingDTO = SavingDTO::fromRequest($request);
-        $saving = $this->savingService->create($savingDTO);
-        return new SavingResource($saving);
+        // $request = SavingRequest::fromRequest($request);
+        // $savingDTO = SavingDTO::fromRequest($request);
+        // $saving = $this->savingService->create($savingDTO);
+        // return new SavingResource($saving);
     }
 
     /**
@@ -59,13 +62,13 @@ class SavingController extends Controller
     public function update(Request $request, Saving $saving)
     {
         //
-        $request = SavingRequest::fromRequest($request);
-        $savingDTO = SavingDTO::fromRequest($request);
-        $saving = $this->savingService->update($saving->id, $savingDTO);
-        if (!$saving) {
-            return response()->json(['message' => 'Saving not found'], 404);
-        }
-        return new SavingResource($saving);
+        // $request = SavingRequest::fromRequest($request);
+        // $savingDTO = SavingDTO::fromRequest($request);
+        // $saving = $this->savingService->update($saving->id, $savingDTO);
+        // if (!$saving) {
+        //     return response()->json(['message' => 'Saving not found'], 404);
+        // }
+        // return new SavingResource($saving);
     }
 
     /**

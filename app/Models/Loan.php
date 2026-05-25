@@ -15,6 +15,8 @@ class Loan extends Model
         'person',
         'amount',
         'porcent',
+        'type_loans',
+        'type',
         'user_id'
     ];
 

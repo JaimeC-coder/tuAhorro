@@ -2,44 +2,57 @@
 
 namespace App\DTOs;
 
-use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Auth;
 
-class UserDTO
+class UserDTO implements InterfaseDTO
 {
-    public string $name;
-    public string $email;
-    public string $phone;
-    public string $password;
-    public ?string $id;
-    public function __construct(string $name, string $phone, string $email, string $password , ?string $id = null)
-    {
-        $this->name = $name;
-        $this->phone = $phone;
-        $this->email = $email;
-        $this->password = $password;
-        $this->id = $id;
-    }
+    private const UNDEFINED = '__UNDEFINED__';
 
-    public static function fromRequest(UserRequest $request): self
+    public function __construct(
+        public readonly string $name = self::UNDEFINED,
+        public readonly string $phone = self::UNDEFINED,
+        public readonly string $email = self::UNDEFINED,
+        public readonly string $password = self::UNDEFINED,
+        public readonly ?string $id = null
+    ) {}
+
+    public static function fromArrayAPI(array $data): self
     {
         return new self(
-            $request['name'],
-            $request['phone'],
-            $request['email'],
-            $request['password'],
-            $request->input('id')
+            name: array_key_exists('name', $data) ? $data['name'] : self::UNDEFINED,
+            phone: array_key_exists('phone', $data) ? $data['phone'] : self::UNDEFINED,
+            email: array_key_exists('email', $data) ? $data['email'] : self::UNDEFINED,
+            password: array_key_exists('password', $data) ? $data['password'] : self::UNDEFINED,
+            id: Auth::guard('api')->id()
         );
     }
-
-    public function toArray(): array
+    public static function fromArrayWeb(array $data): self
     {
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'id' => $this->id
-
-        ];
+        return new self(
+            name: array_key_exists('name', $data) ? $data['name'] : self::UNDEFINED,
+            phone: array_key_exists('phone', $data) ? $data['phone'] : self::UNDEFINED,
+            email: array_key_exists('email', $data) ? $data['email'] : self::UNDEFINED,
+            password: array_key_exists('password', $data) ? $data['password'] : self::UNDEFINED,
+            id: Auth::id()
+        );
+    }
+    public function has(string $field): bool
+    {
+        return $this->$field !== self::UNDEFINED;
     }
 
+    public  function toArray(): array
+    {
+        $fields = ['name', 'phone', 'email', 'password', 'id'];
+        $result = [];
+
+        foreach ($fields as $field) {
+            if ($this->has($field)) {
+                $result[$field] = $this->$field;
+            }
+        }
+
+        return $result;
+    }
 }
+

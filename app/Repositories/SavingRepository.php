@@ -4,10 +4,14 @@ namespace App\Repositories;
 
 use App\Models\Saving;
 
-class SavingRepository
+class SavingRepository extends BaseRepository
 {
-    public function create(array $data)
+
+    public function __construct()
     {
-        return Saving::create($data);
+        $this->model = new Saving();
     }
+
+
+
 }

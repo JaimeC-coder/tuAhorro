@@ -2,36 +2,55 @@
 
 namespace App\DTOs;
 
-use App\Http\Requests\CoinRequest;
 
-class CoinDTO
+class  CoinDTO implements InterfaseDTO
 {
-    public string $type;
-    public string $symbol;
-    public ?string $id;
+    private const UNDEFINED = '__UNDEFINED__';
 
-    public function __construct(string $type, string $symbol, ?string $id = null)
-    {
-        $this->type = $type;
-        $this->symbol = $symbol;
-        $this->id = $id;
-    }
 
-    public static function fromRequest(CoinRequest $data): self
+    public function __construct(
+        public readonly  mixed  $type = self::UNDEFINED,
+        public readonly  mixed  $symbol = self::UNDEFINED,
+        public readonly  ?int  $id = null
+
+    ) {}
+
+    public static function fromArrayAPI(array $data): self
     {
         return new self(
-            $data->input('type'),
-            $data->input('symbol'),
-            $data->input('id')
+            id: $data['id']           ?? null,
+            type: array_key_exists('type', $data)       ? $data['type']       : self::UNDEFINED,
+            symbol: array_key_exists('symbol', $data)       ? $data['symbol']       : self::UNDEFINED,
+
         );
+    }
+    public static function fromArraywEB(array $data): self
+    {
+        return new self(
+            id: $data['id']           ?? null,
+            type: array_key_exists('type', $data)       ? $data['type']       : self::UNDEFINED,
+            symbol: array_key_exists('symbol', $data)       ? $data['symbol']       : self::UNDEFINED,
+
+        );
+    }
+
+
+    public function has(string $field): bool
+    {
+        return $this->$field !== self::UNDEFINED;
     }
 
     public function toArray(): array
     {
-        return [
-            'type' => $this->type,
-            'symbol' => $this->symbol,
-            'id' => $this->id,
-        ];
+        $fields = ['type', 'symbol'];
+        $result = [];
+
+        foreach ($fields as $field) {
+            if ($this->has($field)) {
+                $result[$field] = $this->$field;
+            }
+        }
+
+        return $result;
     }
 }

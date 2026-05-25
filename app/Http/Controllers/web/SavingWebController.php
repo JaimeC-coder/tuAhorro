@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\web;
 
+use App\DTOs\Filter\SavingFilterDTO;
 use App\DTOs\SavingDTO;
 use App\Http\Requests\SavingRequest;
 use App\Http\Resources\SavingResource;
 use App\Http\Controllers\Controller;
 use App\Models\Saving;
+use App\Services\SavingService;
 use Illuminate\Http\Request;
 
 class SavingWebController extends Controller
 {
-    protected $savingService;
-    public function __construct($savingService)
+    protected SavingService $savingService;
+    public function __construct(SavingService $savingService)
     {
         $this->savingService = $savingService;
     }
@@ -22,7 +24,7 @@ class SavingWebController extends Controller
     public function list(Request $request)
     {
         //
-        $request = SavingDTO::fromRequest($request);
+        $request = SavingFilterDTO::fromRequest($request);
         $savings = $this->savingService->getAllSavings($request);
         return SavingResource::collection($savings);
 

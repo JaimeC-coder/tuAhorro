@@ -16,14 +16,12 @@ use App\Http\Controllers\Controller;
 
 class CoinWebController extends Controller
 {
-    protected $coinService;
+    protected CoinService $coinService;
 
     public function __construct(CoinService $coinService)
     {
         $this->coinService = $coinService;
     }
-
-
 
     /**
      * Display a listing of the resource.
@@ -36,7 +34,6 @@ class CoinWebController extends Controller
         $coins = CoinResource::collection($coins);
 
        $coins = ResourceViewHelper::paginate($coins, $request);
-        //  return $coins;
         return view('web.coins.index', $coins);
     }
 
@@ -50,63 +47,4 @@ class CoinWebController extends Controller
         return view('web.coins.edit');
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {
-    //     $request = CoinRequest::createFrom($request);
-    //     $validator = Validator::make($request->all(), (new CoinRequest())->rules());
-
-    //     if ($validator->fails()) {
-
-    //         throw new ApiValidationException($validator->errors()->toArray());
-    //     }
-    //     $coinDTO = CoinDTO::fromRequest($request);
-    //     $coin = $this->coinService->create($coinDTO);
-    //     return new CoinResource($coin);
-    // }
-
-    /**
-     * Display the specified resource.
-     */
-    // public function show(Request $request)
-    // {
-    //     //
-    //     $coin = $this->coinService->find($request->id);
-    //     if (!$coin) {
-    //         throw new \Exception('Moneda no encontrada', 404);
-    //     }
-    //     return new CoinResource($coin);
-    // }
-
-
-    // public function update(Request $request)
-    // {
-    //     //
-    //     $request = CoinRequest::createFrom($request);
-    //     $coinDTO = CoinDTO::fromRequest($request);
-    //     $coin = $this->coinService->update($request->id, $coinDTO);
-    //     if (!$coin) {
-    //         throw new \Exception('Moneda no encontrada', 404);
-    //     }
-    //     return new CoinResource($coin);
-    // }
-
-
-    // public function destroy(Request $request)
-    // {
-    //     //
-    //     $request = CoinRequest::createFrom($request);
-    //     $validator = Validator::make($request->all(), (new CoinRequest())->rules());
-    //     if ($validator->fails()) {
-    //         throw new ApiValidationException($validator->errors()->toArray());
-    //     }
-    //     $coin = $this->coinService->delete($request->id);
-    //     if (!$coin) {
-    //         throw new \Exception('Moneda no encontrada', 404);
-    //     }
-    //     return "Moneda eliminada correctamente";
-    // }
 }

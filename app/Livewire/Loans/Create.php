@@ -8,7 +8,6 @@ use App\Services\LoanService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
-use Flux\Flux;
 
 class Create extends Component
 {
@@ -45,7 +44,7 @@ class Create extends Component
         try {
             $this->validate([
                 'newDetail.description' => 'nullable|string|max:255',
-                'newDetail.amount'      => 'required|numeric|min:0.01',
+                'newDetail.amount'      => 'required|numeric',
                 'newDetail.type'        => 'required|in:prestamo,adelanto',
                 'newDetail.date'        => 'nullable|date',
             ], [
@@ -107,7 +106,7 @@ class Create extends Component
 
             $loanDto = LoanDTO::fromArraywEB([
                 'person'     => $this->person,
-                'amount'     => $amount,
+                'amount'     => (float) str_replace(',', '', $amount) ,
                 'type_loans' => $this->type_loans,
                 'date_init'  => $this->date_init,
                 'details'    => $details,

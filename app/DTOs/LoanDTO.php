@@ -3,9 +3,8 @@
 namespace App\DTOs;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
-class LoanDTO
+class LoanDTO implements InterfaseDTO
 {
     private const UNDEFINED = '__UNDEFINED__';
 
